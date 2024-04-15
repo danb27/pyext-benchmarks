@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "benchmark"
+version = "0.1.0"
+description = ""
+authors = ["dan <danbianchini@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11.5"
+cython = "^3.0.10"
+maturin = "^1.5.1"
+pandas = "^2.2.2"
+tabulate = "^0.9.0"
+
+
+[build-system]
+requires = ["poetry-core", "setuptools", "wheel", "Cython"]
+build-backend = "poetry.core.masonry.api"
