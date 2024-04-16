@@ -17,9 +17,10 @@ compile-cython:
 compile-rust:
 	@echo "Compiling Rust code..."
 	@{ \
+  		set -e && \
 		cd src/rust_implementation && \
-		$(PYTHON) -m maturin build; \
-		$(PYTHON) -m pip install .; \
+		$(PYTHON) -m maturin build --release && \
+		$(PYTHON) -m pip install target/wheels/rust_implementation*.whl; \
 	} > /dev/null
 
 update-ground-truth:

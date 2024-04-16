@@ -10,17 +10,18 @@ In all cases it is cumbersome to write and maintain the extension code, so it sh
 
 (All times are in nanoseconds)
 
- |    | task              | lang   |   avg_time |   std_deviation |   diff_ratio |
-|---:|:------------------|:-------|-----------:|----------------:|-------------:|
-|  0 | bigram            | python |    30.0361 |         1.66569 |   nan        |
-|  1 | bigram            | cython |    23.7656 |         1.22293 |    -0.208768 |
-|  2 | bigram            | rust   |    33.5566 |         1.9715  |     0.117208 |
-|  3 | two_sum_n_squared | python |   655.498  |        14.7438  |   nan        |
-|  4 | two_sum_n_squared | cython |   467.766  |        14.9997  |    -0.286396 |
-|  5 | two_sum_n_squared | rust   |    38.8923 |         1.57904 |    -0.940668 |
-|  6 | two_sum_n         | python |    68.5163 |         3.29455 |   nan        |
-|  7 | two_sum_n         | cython |    53.8743 |         2.20422 |    -0.213701 |
-|  8 | two_sum_n         | rust   |    52.1785 |         2.47055 |    -0.238451 | 
+ |    | task              | lang           |   avg_time |   std_deviation |   diff_ratio |
+|---:|:------------------|:---------------|-----------:|----------------:|-------------:|
+|  0 | bigram            | python         |    31.0871 |         2.47976 |   nan        |
+|  1 | bigram            | cython         |    24.0044 |         1.21291 |    -0.227833 |
+|  2 | bigram            | rust           |    34.5862 |         2.74125 |     0.112559 |
+|  3 | two_sum_n_squared | python         |   690.067  |        28.8119  |   nan        |
+|  4 | two_sum_n_squared | cython         |   494.495  |        17.8117  |    -0.28341  |
+|  5 | two_sum_n_squared | rust           |    39.9105 |         2.71808 |    -0.942164 |
+|  6 | two_sum_n         | python         |    69.9991 |         3.36944 |   nan        |
+|  7 | two_sum_n         | cython         |    53.0215 |         2.28601 |    -0.24254  |
+|  8 | two_sum_n         | rust           |    44.0319 |         2.11433 |    -0.370965 |
+|  9 | two_sum_n         | rust+hashbrown |    39.0061 |         2.11281 |    -0.442762 |  
 
 ## How to run the benchmarks
 1) Create a virtual environment at `./.venv` and activate it

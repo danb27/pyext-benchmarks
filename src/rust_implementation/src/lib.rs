@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use hashbrown::HashMap as HBHashMap;
 use pyo3::prelude::*;
 
 
@@ -30,7 +31,24 @@ fn two_sum_n_squared(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
 
 #[pyfunction]
 fn two_sum_n(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
-    let mut map = HashMap::new();
+    let mut map = HashMap::with_capacity(nums.len());
+
+    for (i, num) in nums.iter().enumerate() {
+        let complement = target - num;
+
+        if let Some(&j) = map.get(&complement) {
+            return Ok(vec![j as i32, i as i32]);
+        }
+
+        map.insert(num, i);
+    }
+
+    Ok(vec![])
+}
+
+#[pyfunction]
+fn two_sum_n_hashbrown(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
+    let mut map = HBHashMap::with_capacity(nums.len());
 
     for (i, num) in nums.iter().enumerate() {
         let complement = target - num;
@@ -51,5 +69,6 @@ fn rust_implementation(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(bigrams, m)?)?;
     m.add_function(wrap_pyfunction!(two_sum_n_squared, m)?)?;
     m.add_function(wrap_pyfunction!(two_sum_n, m)?)?;
+    m.add_function(wrap_pyfunction!(two_sum_n_hashbrown, m)?)?;
     Ok(())
 }

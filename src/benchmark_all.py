@@ -48,6 +48,11 @@ ALL_RUNNERS = {
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
         ),
+        "rust+hashbrown": BenchmarkRunner(
+            rust_funcs.two_sum_n_hashbrown,
+            constants.TWO_SUM_REQUESTS,
+            constants.TWO_SUM_RESPONSES,
+        ),
     },
 }
 
