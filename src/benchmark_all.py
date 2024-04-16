@@ -1,4 +1,5 @@
 import pandas as pd
+from juliacall import Main as julia_funcs
 
 import rust_implementation as rust_funcs
 from cython_implementation import funcs as cython_funcs
@@ -6,6 +7,9 @@ from data import constants
 from python_implementation.funcs import bigrams, two_sum_n_squared, two_sum_n
 from runner import BenchmarkRunner
 
+
+# Load Julia functions
+julia_funcs.include("julia_implementation/funcs.jl")
 
 ALL_RUNNERS = {
     "bigram": {
@@ -17,6 +21,9 @@ ALL_RUNNERS = {
         ),
         "rust": BenchmarkRunner(
             rust_funcs.bigrams, constants.BIGRAM_REQUESTS, constants.BIGRAM_OUTPUTS
+        ),
+        "julia": BenchmarkRunner(
+            julia_funcs.bigrams, constants.BIGRAM_REQUESTS, constants.BIGRAM_OUTPUTS
         ),
     },
     "two_sum_n_squared": {
@@ -30,6 +37,11 @@ ALL_RUNNERS = {
         ),
         "rust": BenchmarkRunner(
             rust_funcs.two_sum_n_squared,
+            constants.TWO_SUM_REQUESTS,
+            constants.TWO_SUM_RESPONSES,
+        ),
+        "julia": BenchmarkRunner(
+            julia_funcs.two_sum_n_squared,
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
         ),
@@ -53,6 +65,11 @@ ALL_RUNNERS = {
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
         ),
+        "julia": BenchmarkRunner(
+            julia_funcs.two_sum_n,
+            constants.TWO_SUM_REQUESTS,
+            constants.TWO_SUM_RESPONSES,
+        ),
     },
 }
 
@@ -67,26 +84,38 @@ results = []
 index = []
 full_results = []
 python_times = {k: None for k in ALL_RUNNERS.keys()}
+python_median_times = {k: None for k in ALL_RUNNERS.keys()}
 for task, implementations in ALL_RUNNERS.items():
     for lang, runner in implementations.items():
         print(f"Benchmarking {lang}({task})")
-        avg_time, std_deviation = runner.process_all_repeated()
-        results.append({"avg_time": avg_time, "std_deviation": std_deviation})
+        avg_time, std_deviation, median, dropoff = runner.process_all_repeated()
+        results_dict = {
+            "avg_time": avg_time,
+            "median_time": median,
+            "std_deviation": std_deviation,
+            # Dropoff from first iteration to second
+            "dropoff_ratio": dropoff,
+        }
+        results.append(results_dict)
         index.append((task, lang))
         full_results.append(
             {
                 "task": task,
                 "lang": lang,
-                "avg_time": avg_time,
-                "std_deviation": std_deviation,
             }
+            | results_dict
         )
         if lang == "python":
             python_times[task] = avg_time
+            python_median_times[task] = median
 
 df = pd.DataFrame(full_results)
 
 df["diff_ratio"] = df.apply(
     lambda row: ((row["avg_time"] / python_times[row["task"]]) - 1 or None), axis=1
+)
+df["diff_ratio_median"] = df.apply(
+    lambda row: ((row["median_time"] / python_median_times[row["task"]]) - 1 or None),
+    axis=1,
 )
 print("\n\nResults: \n", df.to_markdown(), "\n\n")

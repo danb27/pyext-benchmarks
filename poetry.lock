@@ -68,6 +68,34 @@ files = [
 ]
 
 [[package]]
+name = "juliacall"
+version = "0.9.19"
+description = "Julia and Python in seamless harmony"
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "juliacall-0.9.19-py3-none-any.whl", hash = "sha256:41a4b1f6d64bbb651ab480c80de6ba69d79a4279b9285ab533f80001966b9774"},
+    {file = "juliacall-0.9.19.tar.gz", hash = "sha256:45f9d21276145473791ff77978b03518e76d1085e7d468cefbc95871d61d2b94"},
+]
+
+[package.dependencies]
+juliapkg = ">=0.1.8,<0.2.0"
+
+[[package]]
+name = "juliapkg"
+version = "0.1.11"
+description = "Julia version manager and package manager"
+optional = false
+python-versions = "*"
+files = [
+    {file = "juliapkg-0.1.11-py3-none-any.whl", hash = "sha256:2f44a9b9e1d6fa7c9ad077527452c4f4491ca81ada844909a98d07be457a6ac1"},
+    {file = "juliapkg-0.1.11.tar.gz", hash = "sha256:de0a596c0c65f2da93a24ae45fb71626cfa238d067dc37684837ef7ba74a4af7"},
+]
+
+[package.dependencies]
+semantic-version = ">=2.9,<3.0"
+
+[[package]]
 name = "maturin"
 version = "1.5.1"
 description = "Build and publish crates with pyo3, rust-cpython and cffi bindings as well as rust binaries as python packages"
@@ -234,6 +262,21 @@ files = [
 ]
 
 [[package]]
+name = "semantic-version"
+version = "2.10.0"
+description = "A library implementing the 'SemVer' scheme."
+optional = false
+python-versions = ">=2.7"
+files = [
+    {file = "semantic_version-2.10.0-py2.py3-none-any.whl", hash = "sha256:de78a3b8e0feda74cabc54aab2da702113e33ac9d9eb9d2389bcf1f58b7d9177"},
+    {file = "semantic_version-2.10.0.tar.gz", hash = "sha256:bdabb6d336998cbb378d4b9db3a4b56a1e3235701dc05ea2690d9a997ed5041c"},
+]
+
+[package.extras]
+dev = ["Django (>=1.11)", "check-manifest", "colorama (<=0.4.1)", "coverage", "flake8", "nose2", "readme-renderer (<25.0)", "tox", "wheel", "zest.releaser[recommended]"]
+doc = ["Sphinx", "sphinx-rtd-theme"]
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -272,4 +315,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.5"
-content-hash = "c60d0ae67907073993b8203897b221c589dd4611cdc663d655ebb78c0386095f"
+content-hash = "399c80e9456abbbbfb77b1cbef42e0a499c09eef0a6e4aefcfc5f59b9d857ee7"

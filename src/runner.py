@@ -1,35 +1,6 @@
-from functools import wraps
-from time import perf_counter_ns as perf_counter
+from ast import literal_eval
+from time import perf_counter_ns
 from typing import Any, Callable
-
-
-def timeit(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start = perf_counter()
-        result = func(*args, **kwargs)
-        end = perf_counter()
-        print(f"{func.__name__} took {end - start} ns")
-        return result
-
-    return wrapper
-
-
-def timeit_repeated(n):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            result = None
-            start = perf_counter()
-            for _ in range(n):
-                result = func(*args, **kwargs)
-            end = perf_counter()
-            print(f"{func.__name__} took {(end - start)/n} ns on average")
-            return result
-
-        return wrapper
-
-    return decorator
 
 
 class BenchmarkRunner:
@@ -45,7 +16,9 @@ class BenchmarkRunner:
         if isinstance(expected, Callable):
             assert expected(response, **request)
         else:
-            assert str(response) == expected, f"Expected {expected}, but got {response}"
+            assert response == literal_eval(
+                expected
+            ), f"Expected {expected}, but got {response} type({type(response)} vs. {type(expected)}) size({len(response)} vs. {len(expected)})"
 
     def process_one(self, **kwargs):
         return self.func(**kwargs)
@@ -59,12 +32,19 @@ class BenchmarkRunner:
 
     def process_all_repeated(self):
         times = []
-        for _ in range(1_000):
-            start = perf_counter()
+        n = 1_000
+        for _ in range(n):
+            start = perf_counter_ns()
             self.process_all()
-            end = perf_counter()
-            times.append((end - start) / 10_000)
+            end = perf_counter_ns()
+            # convert nanoseconds to microseconds
+            duration = (end - start) / len(self.inputs) / 1_000
+            times.append(duration)
 
         avg = sum(times) / len(times)
         std = (sum((t - avg) ** 2 for t in times) / len(times)) ** 0.5
-        return avg, std
+        median = sorted(times)[len(times) // 2]
+        # diff from first iteration to second
+        initial_dropoff = (times[1] - times[0]) / times[0]
+
+        return avg, std, median, initial_dropoff

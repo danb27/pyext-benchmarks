@@ -6,6 +6,7 @@ PYTHON = ${BASE_DIR}/.venv/bin/python
 all: setup compile benchmark clean
 setup: update-ground-truth
 compile: compile-rust compile-cython
+clean: clean-cython clean-rust clean-outputs
 
 compile-cython:
 	@echo "Compiling Cython code..."
@@ -43,5 +44,3 @@ clean-rust:
 clean-outputs:
 	@echo "Cleaning up output files..."
 	@rm -rf src/data/outputs/*.txt
-
-clean: clean-cython clean-rust clean-outputs
