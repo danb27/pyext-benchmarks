@@ -6,10 +6,13 @@ from tqdm import tqdm
 
 
 class BenchmarkRunner:
-    def __init__(self, func, inputs: dict[str, dict], outputs: dict[str, Any]):
+    def __init__(
+        self, func, inputs: dict[str, dict], outputs: dict[str, Any], n: int = 1_000
+    ):
         self.func = func
         self.inputs = inputs
         self.outputs = outputs
+        self.n = n
         # Check for any differences between the keys in texts and outputs
         assert set(self.inputs.keys()) == set(self.outputs.keys())
 
@@ -41,14 +44,14 @@ class BenchmarkRunner:
 
     def process_all_repeated(self):
         times = []
-        n = 1_000
-        for _ in tqdm(range(n), desc=f"Benchmarking {self.func.__name__}", total=n):
+        for _ in tqdm(
+            range(self.n), desc=f"Benchmarking {self.func.__name__}", total=self.n
+        ):
             start = perf_counter_ns()
             self.process_all()
             end = perf_counter_ns()
             # convert nanoseconds to microseconds
             duration = (end - start) / 1_000
-            # convert microseconds to seconds
             times.append(duration)
 
         avg = sum(times) / len(times)

@@ -15,8 +15,8 @@ BIGRAM_OUTPUTS = {file.name: file.read_text() for file in BIGRAMS_DIR.glob("*.tx
 TWO_SUM_REQUESTS = {}
 TWO_SUM_RESPONSES = {}
 
-FIBONACCI_REQUESTS = {n: {"n": 30} for n in range(1)}
-FIBONACCI_RESPONSES = {n: 832040 for n in range(1)}
+FIBONACCI_REQUESTS = {n: {"n": 30} for n in range(3)}
+FIBONACCI_RESPONSES = {n: 832040 for n in range(3)}
 
 
 def solution_is_valid(solution, nums, target) -> bool:

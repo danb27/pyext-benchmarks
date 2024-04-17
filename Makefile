@@ -30,7 +30,7 @@ update-ground-truth:
 
 benchmark:
 	@echo "Running all benchmarks..."
-	@cd src && $(PYTHON) benchmark_all.py
+	@cd src && $(PYTHON) benchmark.py
 
 clean-cython:
 	@echo "Cleaning up Cython build files..."

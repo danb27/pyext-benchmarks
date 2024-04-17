@@ -27,3 +27,16 @@ def fibonacci_recursive(n: int) -> int:
     if n <= 1:
         return n
     return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+
+
+def fibonacci_hash(n: int) -> int:
+    cache = {0: 0, 1: 1}
+
+    def inner(n: int):
+        if n in cache:  # Base case
+            return cache[n]
+        # Compute and cache the Fibonacci number
+        cache[n] = inner(n - 1) + inner(n - 2)  # Recursive case
+        return cache[n]
+
+    return inner(n)

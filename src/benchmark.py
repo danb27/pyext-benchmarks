@@ -28,21 +28,25 @@ ALL_RUNNERS = {
             py_funcs.two_sum_n_squared,
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
+            n=100,
         ),
         "cython": BenchmarkRunner(
             cython_funcs.two_sum_n_squared,
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
+            n=100,
         ),
         "rust": BenchmarkRunner(
             rust_funcs.two_sum_n_squared,
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
+            n=100,
         ),
         "julia": BenchmarkRunner(
             julia_funcs.two_sum_n_squared,
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
+            n=100,
         ),
     },
     "two_sum_n": {
@@ -68,6 +72,7 @@ ALL_RUNNERS = {
             julia_funcs.two_sum_n,
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
+            n=100,
         ),
     },
     "fibonacci_recursive": {
@@ -75,19 +80,50 @@ ALL_RUNNERS = {
             py_funcs.fibonacci_recursive,
             constants.FIBONACCI_REQUESTS,
             constants.FIBONACCI_RESPONSES,
+            n=100,
         ),
         "cython": BenchmarkRunner(
             cython_funcs.fibonacci_recursive,
             constants.FIBONACCI_REQUESTS,
             constants.FIBONACCI_RESPONSES,
+            n=100,
         ),
         "rust": BenchmarkRunner(
             rust_funcs.fibonacci_recursive,
             constants.FIBONACCI_REQUESTS,
             constants.FIBONACCI_RESPONSES,
+            n=100,
         ),
         "julia": BenchmarkRunner(
             julia_funcs.fibonacci_recursive,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
+            n=100,
+        ),
+    },
+    "fibonacci_hash": {
+        "python": BenchmarkRunner(
+            py_funcs.fibonacci_hash,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
+        ),
+        "cython": BenchmarkRunner(
+            cython_funcs.fibonacci_hash,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
+        ),
+        "rust": BenchmarkRunner(
+            rust_funcs.fibonacci_hash,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
+        ),
+        "rust+hashbrown": BenchmarkRunner(
+            rust_funcs.fibonacci_hashbrown,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
+        ),
+        "julia": BenchmarkRunner(
+            julia_funcs.fibonacci_hash,
             constants.FIBONACCI_REQUESTS,
             constants.FIBONACCI_RESPONSES,
         ),
@@ -114,6 +150,7 @@ for task, implementations in ALL_RUNNERS.items():
             "avg_time": avg_time,
             "median_time": median,
             "std_deviation": std_deviation,
+            "iterations": runner.n,
             # Dropoff from first iteration to second
             "dropoff_ratio": dropoff,
         }

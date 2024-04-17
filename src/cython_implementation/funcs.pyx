@@ -32,3 +32,15 @@ def fibonacci_recursive(n: int) -> int:
     if n <= 1:
         return n
     return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+
+
+def fibonacci_hash(n: int) -> int:
+    cdef dict[int, int] cache = {0: 0, 1: 1}
+
+    def inner(n: int) -> int:
+        if n in cache:
+            return cache[n]
+        cache[n] = inner(n - 1) + inner(n - 2)
+        return cache[n]
+
+    return inner(n)

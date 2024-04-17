@@ -17,3 +17,4 @@ def two_sum_n(nums, target):
 
 
 fibonacci_recursive = jl.fibonacci_recursive
+fibonacci_hash = jl.fibonacci_hash

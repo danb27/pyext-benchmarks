@@ -39,3 +39,20 @@ function fibonacci_recursive(; n::Int)
         return fibonacci_recursive(n=n-1) + fibonacci_recursive(n=n-2)
     end
 end
+
+
+function fibonacci_hash(; n::Int)
+    cache = Dict{Int, Int}()
+    cache[0] = 0
+    cache[1] = 1
+
+    function inner(n::Int)
+        if haskey(cache, n)
+            return cache[n]
+        end
+        cache[n] = inner(n - 1) + inner(n - 2)
+        return cache[n]
+    end
+
+    return inner(n)
+end

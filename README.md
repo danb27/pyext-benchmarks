@@ -10,26 +10,34 @@ In all cases it is cumbersome to write and maintain the extension code, so it sh
 
 Notes: 
 - All times are in microseconds
-- Each configuration runs a loop of 1000 iterations through every example for the problem.
-- The time for each run is the average execution time per example.
-- The dropoff ratio is the difference in execution time between the first and second iteration.
+- Each configuration runs a loop of X iterations through every example for the problem.
+  - For slower problems, we do less iterations to avoid taking too long.  
 - The diff_ratio is the difference in execution time between pure Python and the other implementations.
 
- |    | task              | lang           |   avg_time |   median_time | std_deviation | dropoff_ratio |    diff_ratio | diff_ratio_median |
-|---:|:------------------|:---------------|-----------:|--------------:|--------------:|--------------:|--------------:|------------------:|
-|  0 | bigram            | python         |   76.478   |      74.6158  |       5.25559 |     -0.174932 |           nan |               nan |
-|  1 | bigram            | cython         |   61.0714  |      59.71    |       4.04654 |    -0.0842259 |     -0.201451 |         -0.199767 |
-|  2 | bigram            | rust           |   82.8022  |      80.131   |       10.2181 | **-0.417715** | **0.0826931** |     **0.0739154** |
-|  3 | bigram            | julia          |  196.488   |     100.703   |   **1213.67** |     -0.117221 |   **1.56921** |      **0.349615** |
-|  4 | two_sum_n_squared | python         |   66.5019  |      66.402   |       1.91578 |   -0.00174258 |           nan |               nan |
-|  5 | two_sum_n_squared | cython         |   47.8642  |      47.7648  |       2.03739 |      0.057461 |     -0.280259 |         -0.280673 |
-|  6 | two_sum_n_squared | rust           |    3.96982 |       3.91077 |      0.204936 |    -0.0331282 |     -0.940305 |         -0.941105 |
-|  7 | two_sum_n_squared | julia          |  978.93    |     449.603   |   **675.497** |  **-0.45259** |   **13.7203** |       **5.77092** |
-|  8 | two_sum_n         | python         |    6.79214 |       6.73089 |      0.264248 |    -0.0682094 |           nan |               nan |
-|  9 | two_sum_n         | cython         |    5.46378 |       5.40208 |      0.230554 |    -0.0797297 |     -0.195574 |          -0.19742 |
-| 10 | two_sum_n         | rust           |    4.4296  |       4.36322 |      0.221771 |  **-0.24146** |     -0.347835 |         -0.351762 |
-| 11 | two_sum_n         | rust+hashbrown |    3.91807 |       3.84966 |      0.239989 |    -0.0100083 |     -0.423147 |         -0.428061 |
-| 12 | two_sum_n         | julia          |   27.176   |      16.89    |   **68.8054** |    -0.0148399 |   **3.00109** |       **1.50933** | 
+ | task                | lang           |     avg_time |   std_deviation |   iterations |   diff_ratio |
+|:--------------------|:---------------|-------------:|----------------:|-------------:|-------------:|
+| bigram              | python         |      308.415 |         21.8851 |         1000 |          nan |
+| **bigram**          | **cython**         |       235.89 |         17.2207 |         1000 |    -0.235153 |
+| bigram              | rust           |      325.695 |         27.3602 |         1000 |    0.0560278 |
+| bigram              | julia          |      542.354 |         3883.27 |         1000 |      0.75852 |
+| two_sum_n_squared   | python         |       3397.6 |         59.9261 |          100 |          nan |
+| two_sum_n_squared   | cython         |      2574.51 |         55.0505 |          100 |    -0.242255 |
+| **two_sum_n_squared**   | **rust**           |      254.234 |         9.44736 |          100 |    -0.925172 |
+| two_sum_n_squared   | julia          |        48973 |         53175.7 |          100 |       13.414 |
+| two_sum_n           | python         |      529.449 |         24.7108 |         1000 |          nan |
+| two_sum_n           | cython         |      418.123 |         25.1149 |         1000 |    -0.210267 |
+| two_sum_n           | rust           |      298.213 |         24.1917 |         1000 |    -0.436748 |
+| **two_sum_n**           | **rust+hashbrown** |      255.792 |         22.6785 |         1000 |    -0.516872 |
+| two_sum_n           | julia          |      3373.33 |         12445.6 |          100 |       5.3714 |
+| fibonacci_recursive | python         |       371314 |         1502.15 |          100 |          nan |
+| fibonacci_recursive | cython         |       197975 |          1899.9 |          100 |    -0.466826 |
+| **fibonacci_recursive** | **rust**           |        14856 |         262.095 |          100 |    -0.959991 |
+| fibonacci_recursive | julia          |      20494.2 |         192.149 |          100 |    -0.944806 |
+| fibonacci_hash      | python         |      26.4787 |          14.414 |         1000 |          nan |
+| fibonacci_hash      | cython         |      13.9276 |         9.41323 |         1000 |    -0.474007 |
+| fibonacci_hash      | rust           |      6.26339 |         1.59288 |         1000 |    -0.763456 |
+| **fibonacci_hash**      | **rust+hashbrown** |      5.09139 |         3.24083 |         1000 |    -0.807717 |
+| fibonacci_hash      | julia          |      61.8679 |         1071.35 |         1000 |      1.33651 | 
 
 ## How to run the benchmarks
 1) Create a virtual environment at `./.venv` and activate it
