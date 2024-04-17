@@ -63,6 +63,15 @@ fn two_sum_n_hashbrown(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
     Ok(vec![])
 }
 
+#[pyfunction]
+fn fibonacci_recursive(n: i32) -> PyResult<i32> {
+    if n <= 1 {
+        return Ok(n);
+    }
+
+    Ok(fibonacci_recursive(n - 1)? + fibonacci_recursive(n - 2)?)
+}
+
 /// A Python module implemented in Rust.
 #[pymodule]
 fn rust_implementation(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -70,5 +79,6 @@ fn rust_implementation(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(two_sum_n_squared, m)?)?;
     m.add_function(wrap_pyfunction!(two_sum_n, m)?)?;
     m.add_function(wrap_pyfunction!(two_sum_n_hashbrown, m)?)?;
+    m.add_function(wrap_pyfunction!(fibonacci_recursive, m)?)?;
     Ok(())
 }

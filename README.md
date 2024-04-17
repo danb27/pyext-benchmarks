@@ -1,5 +1,5 @@
 # Benchmarking Python Extensions
-A quick project to compare the performance of Python, Cython and Rust on certain tasks.
+A quick project to compare the performance of Python, Cython, Julia, and Rust on certain tasks.
 The goal is to show that depending on the problem, you can write a Python extension in another language to speed up the code. 
 In some cases the difference is significant, in other cases, the overhead of calling the extension is too high.
 In all cases it is cumbersome to write and maintain the extension code, so it should be done only when necessary to address critical bottlenecks.

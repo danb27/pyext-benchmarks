@@ -1,20 +1,17 @@
 import pandas as pd
-from juliacall import Main as julia_funcs
 
 import rust_implementation as rust_funcs
 from cython_implementation import funcs as cython_funcs
 from data import constants
-from python_implementation.funcs import bigrams, two_sum_n_squared, two_sum_n
+from julia_implementation import funcs as julia_funcs
+from python_implementation import funcs as py_funcs
 from runner import BenchmarkRunner
 
-
-# Load Julia functions
-julia_funcs.include("julia_implementation/funcs.jl")
 
 ALL_RUNNERS = {
     "bigram": {
         "python": BenchmarkRunner(
-            bigrams, constants.BIGRAM_REQUESTS, constants.BIGRAM_OUTPUTS
+            py_funcs.bigrams, constants.BIGRAM_REQUESTS, constants.BIGRAM_OUTPUTS
         ),
         "cython": BenchmarkRunner(
             cython_funcs.bigrams, constants.BIGRAM_REQUESTS, constants.BIGRAM_OUTPUTS
@@ -28,7 +25,9 @@ ALL_RUNNERS = {
     },
     "two_sum_n_squared": {
         "python": BenchmarkRunner(
-            two_sum_n_squared, constants.TWO_SUM_REQUESTS, constants.TWO_SUM_RESPONSES
+            py_funcs.two_sum_n_squared,
+            constants.TWO_SUM_REQUESTS,
+            constants.TWO_SUM_RESPONSES,
         ),
         "cython": BenchmarkRunner(
             cython_funcs.two_sum_n_squared,
@@ -48,7 +47,7 @@ ALL_RUNNERS = {
     },
     "two_sum_n": {
         "python": BenchmarkRunner(
-            two_sum_n, constants.TWO_SUM_REQUESTS, constants.TWO_SUM_RESPONSES
+            py_funcs.two_sum_n, constants.TWO_SUM_REQUESTS, constants.TWO_SUM_RESPONSES
         ),
         "cython": BenchmarkRunner(
             cython_funcs.two_sum_n,
@@ -69,6 +68,28 @@ ALL_RUNNERS = {
             julia_funcs.two_sum_n,
             constants.TWO_SUM_REQUESTS,
             constants.TWO_SUM_RESPONSES,
+        ),
+    },
+    "fibonacci_recursive": {
+        "python": BenchmarkRunner(
+            py_funcs.fibonacci_recursive,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
+        ),
+        "cython": BenchmarkRunner(
+            cython_funcs.fibonacci_recursive,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
+        ),
+        "rust": BenchmarkRunner(
+            rust_funcs.fibonacci_recursive,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
+        ),
+        "julia": BenchmarkRunner(
+            julia_funcs.fibonacci_recursive,
+            constants.FIBONACCI_REQUESTS,
+            constants.FIBONACCI_RESPONSES,
         ),
     },
 }

@@ -2,6 +2,8 @@ from ast import literal_eval
 from time import perf_counter_ns
 from typing import Any, Callable
 
+from tqdm import tqdm
+
 
 class BenchmarkRunner:
     def __init__(self, func, inputs: dict[str, dict], outputs: dict[str, Any]):
@@ -16,9 +18,16 @@ class BenchmarkRunner:
         if isinstance(expected, Callable):
             assert expected(response, **request)
         else:
-            assert response == literal_eval(
-                expected
-            ), f"Expected {expected}, but got {response} type({type(response)} vs. {type(expected)}) size({len(response)} vs. {len(expected)})"
+            if isinstance(expected, str):
+                eval_expected = literal_eval(expected)
+                if isinstance(eval_expected, list) and not isinstance(response, list):
+                    # For Julia VectorValue's
+                    response = list(response)
+                assert (
+                    response == eval_expected
+                ), f"Expected {expected}, but got {response} type({type(response)} vs. {type(expected)}) size({len(response)} vs. {len(expected)})"
+            else:
+                assert response == expected
 
     def process_one(self, **kwargs):
         return self.func(**kwargs)
@@ -33,12 +42,13 @@ class BenchmarkRunner:
     def process_all_repeated(self):
         times = []
         n = 1_000
-        for _ in range(n):
+        for _ in tqdm(range(n), desc=f"Benchmarking {self.func.__name__}", total=n):
             start = perf_counter_ns()
             self.process_all()
             end = perf_counter_ns()
             # convert nanoseconds to microseconds
-            duration = (end - start) / len(self.inputs) / 1_000
+            duration = (end - start) / 1_000
+            # convert microseconds to seconds
             times.append(duration)
 
         avg = sum(times) / len(times)
