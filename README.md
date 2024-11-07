@@ -18,8 +18,6 @@ Notes:
 
 Results:
 
-Results:
-
 |    | task                | lang           |     avg_time |   median_time |   std_deviation |   iterations |   dropoff_ratio |   diff_ratio |   diff_ratio_median |
 |---:|:--------------------|:---------------|-------------:|--------------:|----------------:|-------------:|----------------:|-------------:|--------------------:|
 |  0 | bigram              | python         |    280.712   |       279     |      13.1209    |         1000 |    -0.215146    |   nan        |          nan        |
