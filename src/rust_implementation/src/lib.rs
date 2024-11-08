@@ -89,31 +89,14 @@ fn two_sum_n_hashbrown(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
     Ok(Vec::new())
 }
 
+
 #[pyfunction]
 fn fibonacci_recursive(n: i32) -> PyResult<i32> {
-    if n < 0 {
-        return Ok(0);
+    if n <= 1 {
+        return Ok(n);
     }
 
-    #[inline(always)]
-    fn fib_pair(n: i32) -> (i32, i32) {
-        match n {
-            0 => (0, 1),
-            n => {
-                let k = n / 2;
-                let (fk, fk1) = fib_pair(k);
-                let fk2 = fk * (2 * fk1 - fk);
-                let fk3 = fk * fk + fk1 * fk1;
-                if n % 2 == 0 {
-                    (fk2, fk3)
-                } else {
-                    (fk3, fk2 + fk3)
-                }
-            }
-        }
-    }
-
-    Ok(fib_pair(n).0)
+    Ok(fibonacci_recursive(n - 1)? + fibonacci_recursive(n - 2)?)
 }
 
 #[pyfunction]
