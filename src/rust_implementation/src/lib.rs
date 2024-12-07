@@ -1,39 +1,60 @@
-use std::collections::HashMap;
-
 use hashbrown::HashMap as HBHashMap;
 use pyo3::prelude::*;
-
+use std::collections::HashMap;
 
 #[pyfunction]
 fn bigrams(text: &str) -> PyResult<Vec<String>> {
-    let tokens: Vec<&str> = text.split_whitespace().collect();
-    let mut bigrams = Vec::with_capacity(tokens.len() - 1);
+    let words: Vec<_> = text.split_whitespace().collect();
+    let len = words.len();
 
-    for i in 0..tokens.len() - 1 {
-        bigrams.push(format!("{} {}", tokens[i], tokens[i + 1]));
+    if len < 2 {
+        return Ok(Vec::new());
     }
+
+    let mut bigrams = Vec::with_capacity(len - 1);
+
+    words.windows(2).for_each(|pair| {
+        let mut s = String::with_capacity(pair[0].len() + pair[1].len() + 1);
+        s.push_str(pair[0]);
+        s.push(' ');
+        s.push_str(pair[1]);
+        bigrams.push(s);
+    });
 
     Ok(bigrams)
 }
 
 #[pyfunction]
 fn two_sum_n_squared(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
-    for i in 0..nums.len() {
-        for j in i + 1..nums.len() {
-            if nums[i] + nums[j] == target {
+    let len = nums.len();
+    if len < 2 {
+        return Ok(Vec::new());
+    }
+
+    for i in 0..len - 1 {
+        let num_i = nums[i];
+        let needed = target - num_i;
+
+        for j in (i + 1)..len {
+            if nums[j] == needed {
                 return Ok(vec![i as i32, j as i32]);
             }
         }
     }
 
-    Ok(vec![])
+    Ok(Vec::new())
 }
 
 #[pyfunction]
 fn two_sum_n(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
-    let mut map = HashMap::with_capacity(nums.len());
+    let len = nums.len();
+    if len < 2 {
+        return Ok(Vec::new());
+    }
 
-    for (i, num) in nums.iter().enumerate() {
+    let mut map = HashMap::with_capacity(len);
+
+    for (i, &num) in nums.iter().enumerate() {
         let complement = target - num;
 
         if let Some(&j) = map.get(&complement) {
@@ -43,14 +64,19 @@ fn two_sum_n(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
         map.insert(num, i);
     }
 
-    Ok(vec![])
+    Ok(Vec::new())
 }
 
 #[pyfunction]
 fn two_sum_n_hashbrown(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
-    let mut map = HBHashMap::with_capacity(nums.len());
+    let len = nums.len();
+    if len < 2 {
+        return Ok(Vec::new());
+    }
 
-    for (i, num) in nums.iter().enumerate() {
+    let mut map = HBHashMap::with_capacity(len);
+
+    for (i, &num) in nums.iter().enumerate() {
         let complement = target - num;
 
         if let Some(&j) = map.get(&complement) {
@@ -60,8 +86,9 @@ fn two_sum_n_hashbrown(nums: Vec<i32>, target: i32) -> PyResult<Vec<i32>> {
         map.insert(num, i);
     }
 
-    Ok(vec![])
+    Ok(Vec::new())
 }
+
 
 #[pyfunction]
 fn fibonacci_recursive(n: i32) -> PyResult<i32> {
@@ -74,49 +101,46 @@ fn fibonacci_recursive(n: i32) -> PyResult<i32> {
 
 #[pyfunction]
 fn fibonacci_hash(n: i32) -> PyResult<i32> {
-    let mut map: HashMap<i32, i32> = HashMap::new();
-
-    fn fib(n: i32, map: &mut HashMap<i32, i32>) -> i32 {
-        if n <= 1 {
-            return n;
-        }
-
-        if let Some(&val) = map.get(&n) {
-            return val;
-        }
-
-        let val = fib(n - 1, map) + fib(n - 2, map);
-        map.insert(n, val);
-        val
+    if n <= 1 {
+        return Ok(n);
     }
 
-    let result = fib(n, &mut map);
-    Ok(result)
+    let mut map = HashMap::with_capacity((n + 1) as usize);
+    map.insert(0, 0);
+    map.insert(1, 1);
+
+    for i in 2..=n {
+        if let (Some(&a), Some(&b)) = (map.get(&(i - 1)), map.get(&(i - 2))) {
+            map.insert(i, a + b);
+        }
+    }
+
+    map.get(&n).copied().ok_or_else(|| {
+        PyErr::new::<pyo3::exceptions::PyValueError, _>("Failed to compute fibonacci")
+    })
 }
 
 #[pyfunction]
 fn fibonacci_hashbrown(n: i32) -> PyResult<i32> {
-    let mut map: HBHashMap<i32, i32> = HBHashMap::new();
-
-    fn fib(n: i32, map: &mut HBHashMap<i32, i32>) -> i32 {
-        if n <= 1 {
-            return n;
-        }
-
-        if let Some(&val) = map.get(&n) {
-            return val;
-        }
-
-        let val = fib(n - 1, map) + fib(n - 2, map);
-        map.insert(n, val);
-        val
+    if n <= 1 {
+        return Ok(n);
     }
 
-    let result = fib(n, &mut map);
-    Ok(result)
+    let mut map = HBHashMap::with_capacity((n + 1) as usize);
+    map.insert(0, 0);
+    map.insert(1, 1);
+
+    for i in 2..=n {
+        if let (Some(&a), Some(&b)) = (map.get(&(i - 1)), map.get(&(i - 2))) {
+            map.insert(i, a + b);
+        }
+    }
+
+    map.get(&n).copied().ok_or_else(|| {
+        PyErr::new::<pyo3::exceptions::PyValueError, _>("Failed to compute fibonacci")
+    })
 }
 
-/// A Python module implemented in Rust.
 #[pymodule]
 fn rust_implementation(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(bigrams, m)?)?;
